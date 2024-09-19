@@ -97,16 +97,17 @@ def get_author(root: "Thread") -> "User":
 def get_user_threads(root: "User") -> List["Thread"]:
     with sqlite3.connect('demo.db') as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, title, detail FROM threds WHERE authorid = ?", (root.id,))
+        cursor.execute("SELECT id, title, detail, memo FROM threds WHERE authorid = ?", (root.id,))
     rows = cursor.fetchall()
     columns = [description[0] for description in cursor.description]
             
     id_index = columns.index('id')
     title_index = columns.index('title')
     detail_index = columns.index('detail')
+    memo_index = columns.index('memo')
             
     return [
-        Thread(id=row[id_index], title=row[title_index], detail=row[detail_index])
+        Thread(id=row[id_index], title=row[title_index], detail=row[detail_index], secretmemo=row[memo_index] )
         for row in rows
     ]
     
